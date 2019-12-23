@@ -1,0 +1,11 @@
+name: hilbert_curve
+axiom: A 
+turn_angle: 90 
+rules: 
+    - predecessor: A
+      successor: −BF+AFA+FB−
+      ruletype: 'simple'
+    - predecessor: B 
+      successor: +AF−BFB−FA+ 
+      ruletype: 'simple'
+init_angle: 0

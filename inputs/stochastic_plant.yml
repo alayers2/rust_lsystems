@@ -1,0 +1,14 @@
+name: stochastic_plant
+axiom: F 
+turn_angle: 22
+rules: 
+    - predecessor: F
+      successors:
+        -  probability: 0.33
+           successor: F[+F]F[-F]F
+        -  probability: 0.33
+           successor: F[+F]F
+        -  probability: 0.33
+           successor: F[-F]F
+      ruletype: 'stochastic'
+init_angle: 0
