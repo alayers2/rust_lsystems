@@ -1,5 +1,5 @@
 [package]
-name = "rust_drawing"
+name = "rust_lsystem"
 version = "0.1.0"
 authors = ["Andy <andy@agrible.com>"]
 edition = "2018"

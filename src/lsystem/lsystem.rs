@@ -4,19 +4,29 @@ use serde::{Serialize, Deserialize};
 use super::rule::Rule;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
+/// Struct to describe an L-System and it's various components
 pub struct LSystem {
+    // Name of the lsystem, used when writing out files
     pub name: String,
+    // Axiom, or beginning seed of the system
     pub axiom: String,
+    // Vec of rules that describe the transformations that can happen to the axiom
     pub rules: Vec<Rule>,
-    //pub rules: HashMap<char, String>,
+    // Turn angle for the turtle
     pub turn_angle: i64,
+    // Initial angle for the turtle
     pub init_angle: i64,
     #[serde(default)]
+    // The final string that contains the symbols to be interpreted by the turtle
+    // we declare to the serde framework that this gets a default value since it will
+    // only be populated after the system has been run.
     pub endstring: String
 }
 
 impl LSystem {
     #[allow(dead_code)]
+    /// Returns a new lsystem object given a few initial variables 
+    /// This is a convenience a
     pub fn new(name: &str, axiom: &str, turn_angle: i64) -> LSystem {
         LSystem {
             name: name.to_string(),
@@ -72,6 +82,7 @@ impl LSystem {
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
+    use crate::lsystem::rule::StochasticSuccessor;
 
     #[test]
     fn create_lsystem() {
@@ -84,7 +95,31 @@ mod tests {
     #[test]
     fn test_apply_rule() {
         let mut system = LSystem::new("Test", "A", 90);
-        system.rules.insert('A', String::from("AB"));
+        system.rules.push(
+            Rule::Simple{
+                predecessor: 'A',
+                successor: String::from("AB")
+            }
+        );
+
+        let output = system.apply_rule(&'A');
+        assert_eq!(output, "AB");
+    }
+
+    #[test]
+    fn test_apply_stochactic_rule() {
+        let mut system = LSystem::new("Test", "A", 90);
+        system.rules.push(
+            Rule::Stochastic{
+                predecessor: 'A',
+                successors: vec!(
+                    StochasticSuccessor{
+                        probability: 1.0,
+                        successor: "AB".to_string()
+                    }
+                )
+            }
+        );
 
         let output = system.apply_rule(&'A');
         assert_eq!(output, "AB");
@@ -93,8 +128,19 @@ mod tests {
     #[test]
     fn test_process_string() {
         let mut system = LSystem::new("Test", "A", 90);
-        system.rules.insert('A', String::from("AB"));
-        system.rules.insert('B', String::from("BA"));
+        system.rules.push(
+            Rule::Simple{
+                predecessor: 'A',
+                successor: String::from("AB")
+            }
+        );
+        system.rules.push(
+            Rule::Simple{
+                predecessor: 'B',
+                successor: String::from("BA")
+            }
+        );
+
 
         let input = String::from("AB"); 
         let output = system.process_string(&input);
@@ -102,11 +148,21 @@ mod tests {
     }
 
     #[test]
-
     fn test_generate_system() {
         let mut system = LSystem::new("Test", "AB", 90);
-        system.rules.insert('A', String::from("AB"));
-        system.rules.insert('B', String::from("BA"));
+        system.rules.push(
+            Rule::Simple{
+                predecessor: 'A',
+                successor: String::from("AB")
+            }
+        );
+        system.rules.push(
+            Rule::Simple{
+                predecessor: 'B',
+                successor: String::from("BA")
+            }
+        );
+
         system.generate_system(3);
         assert_eq!(system.endstring, "ABBABAABBAABABBA");
     }

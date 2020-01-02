@@ -6,9 +6,9 @@ use lsystem::lsystem::LSystem;
 use rand::Rng;
 
 
-fn main() {
+pub fn generate_svg(filepath: &str) {
 
-    let mut system = LSystem::from_yml("inputs/stochastic_plant.yml").unwrap();
+    let mut system = LSystem::from_yml(filepath).unwrap();
     let init_direction = 0.0;
     let iters = 8;
 
