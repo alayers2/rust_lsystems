@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+    - name: Install CargoMake
+      run: cargo install --debug cargo-make
+    - name: Run CI Build
+      run: cargo make ci-flow
