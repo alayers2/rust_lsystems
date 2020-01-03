@@ -12,4 +12,4 @@ jobs:
     - name: Install CargoMake
       run: cargo install --debug cargo-make
     - name: Run CI Build
-      run: cargo make ci-flow
+      run: cargo make ci-coverage-flow
